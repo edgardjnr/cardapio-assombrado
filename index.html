@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cardápio Assombrado</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Special+Elite&display=swap">
+<style>
+/* Layout: uma galeria assombrada — cada prato é um quadro pendurado num prego; a rolagem balança o quadro e mergulha dentro dele. */
+:root{
+  --bg:#0E0806;          /* breu de cripta, levemente quente */
+  --bg-2:#1A0E09;
+  --parch:#EBDCC3;       /* pergaminho */
+  --parch-dim:#B9A58A;
+  --accent:#C2410C;      /* laranja da marca */
+  --ember:#F59E0B;       /* chama de vela */
+  --blood:#8E1B1B;
+  --wood-1:#2A170C; --wood-2:#6E4220; --wood-3:#9A6431;
+  --f-display:"Pirata One","UnifrakturCook","Times New Roman",serif;
+  --f-body:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --f-label:"Special Elite","Courier New",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:auto}
+body{background:var(--bg);color:var(--parch);font-family:var(--f-body);font-size:18px;line-height:1.45;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--bg)}
+
+/* ===== atmosfera fixa ===== */
+.atmo{position:fixed;inset:0;pointer-events:none;z-index:0}
+.atmo .glow{position:absolute;inset:-20%;background:
+  radial-gradient(40% 30% at 50% 60%, color-mix(in srgb,var(--accent) 22%,transparent), transparent 70%),
+  radial-gradient(30% 25% at 15% 20%, color-mix(in srgb,var(--blood) 30%,transparent), transparent 70%),
+  radial-gradient(35% 30% at 85% 85%, color-mix(in srgb,var(--accent) 14%,transparent), transparent 70%);
+  animation:breathe 7s ease-in-out infinite alternate}
+.atmo .fog{position:absolute;left:-50%;width:200%;height:45%;bottom:-8%;opacity:.35;
+  background:radial-gradient(closest-side,color-mix(in srgb,var(--parch) 18%,transparent),transparent) 0 0/40% 100% repeat-x;
+  filter:blur(18px);animation:drift 38s linear infinite}
+.atmo .fog.f2{bottom:auto;top:-10%;opacity:.18;animation-duration:55s;animation-direction:reverse}
+#embers{position:absolute;inset:0;width:100%;height:100%}
+@keyframes breathe{from{opacity:.75;transform:scale(1)}to{opacity:1;transform:scale(1.06)}}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(25%)}}
+
+/* ===== navegação ===== */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+.nav ul{list-style:none;margin:0 auto;padding:0;display:flex;gap:8px;justify-content:safe center;max-width:720px;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav button{font-family:var(--f-label);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--parch-dim);background:transparent;border:1px solid color-mix(in srgb,var(--parch) 20%,transparent);border-radius:999px;padding:7px 12px;cursor:pointer;white-space:nowrap;transition:all .25s}
+.nav button[aria-current="true"]{color:var(--bg);background:var(--accent);border-color:var(--accent);box-shadow:0 0 14px color-mix(in srgb,var(--accent) 60%,transparent)}
+.nav button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+.nav .bar{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--blood),var(--accent),var(--ember))}
+
+main{position:relative;z-index:1}
+
+/* ===== abertura ===== */
+.hero{position:relative;min-height:86svh;display:grid;place-items:center;text-align:center;overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:56px 40px}
+.moon{position:absolute;top:8%;left:50%;width:min(62vw,340px);aspect-ratio:1;transform:translateX(-50%);border-radius:50%;
+  background:radial-gradient(circle at 38% 35%,#f6c27a,var(--accent) 55%,#5a1a06 100%);opacity:.32;filter:blur(1px);box-shadow:0 0 120px 30px color-mix(in srgb,var(--accent) 35%,transparent)}
+.hero-in{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;max-width:560px}
+.eyebrow{font-family:var(--f-label);font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--ember)}
+.hero h1{font-family:var(--f-display);font-weight:400;font-size:clamp(3.4rem,17vw,7.5rem);line-height:.88;margin:0;color:var(--parch);text-wrap:balance;
+  text-shadow:0 0 18px color-mix(in srgb,var(--accent) 70%,transparent),0 0 2px #000;animation:flicker 5s infinite}
+.hero h1 span{display:block;color:var(--accent);text-shadow:0 0 24px color-mix(in srgb,var(--accent) 80%,transparent)}
+.hero p{margin:0;font-size:1.2rem;font-style:italic;color:var(--parch-dim);max-width:30ch}
+.hint{margin-top:22px;display:flex;flex-direction:column;align-items:center;gap:6px;font-family:var(--f-label);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--parch-dim)}
+.hint svg{animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(8px);opacity:1}}
+@keyframes flicker{0%,100%,41%,45%,70%{opacity:1}43%{opacity:.55}72%{opacity:.8}}
+.bat{position:absolute;width:42px;color:#000;opacity:.85;animation:fly 14s linear infinite}
+.bat svg{width:100%;animation:flap .22s ease-in-out infinite alternate;transform-origin:center}
+.bat.b1{top:18%;animation-delay:-2s}.bat.b2{top:32%;width:28px;animation-duration:18s;animation-delay:-9s}.bat.b3{top:10%;width:22px;animation-duration:22s;animation-delay:-15s}
+@keyframes fly{0%{transform:translate(-20vw,0)}25%{transform:translate(25vw,-30px)}50%{transform:translate(60vw,20px)}75%{transform:translate(90vw,-20px)}100%{transform:translate(125vw,10px)}}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.45)}}
+
+/* ===== cenas ===== */
+.scene{position:relative;height:230svh}
+.scene + .scene{margin-top:-40svh}
+.stage{position:sticky;top:0;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:64px 20px}
+.veil{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 45%,transparent 0,var(--bg) 70%)}
+
+.zoom{position:relative;will-change:transform,opacity,filter,clip-path;transform-origin:50% 50%}
+.flash{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,transparent 20%,#b3121299 60%,#5a0000 100%);mix-blend-mode:multiply}
+.scene[data-fx="pulse"] .frame{animation:candle 3.2s ease-in-out infinite,beat 1.25s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}12%{transform:scale(1.025)}24%{transform:scale(.995)}36%{transform:scale(1.018)}}
+.scene[data-fx="pulse"] .veil{background:radial-gradient(circle at 50% 45%,transparent 0,#3a0505 70%)}
+.hang{position:relative;--fw:min(70vw,40svh,400px);width:calc(var(--fw) + 32px);transform-origin:50% -46px;will-change:transform}
+.wire{position:absolute;left:0;right:0;top:-48px;height:50px;width:100%;pointer-events:none;overflow:visible}
+.frame{position:relative;padding:16px;border-radius:4px;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 3px,rgba(0,0,0,.18) 3px 4px),
+    linear-gradient(145deg,var(--wood-1),var(--wood-3) 18%,var(--wood-1) 38%,var(--wood-2) 62%,var(--wood-1) 82%,var(--wood-3));
+  box-shadow:
+    0 0 0 1px #000,
+    inset 0 0 0 2px color-mix(in srgb,var(--ember) 45%,transparent),
+    inset 0 0 0 5px var(--wood-1),
+    inset 0 0 0 6px color-mix(in srgb,var(--ember) 35%,transparent),
+    0 30px 60px -10px #000,
+    0 0 50px -8px var(--glow,var(--accent));
+  animation:candle 3.2s ease-in-out infinite}
+@keyframes candle{0%,100%{filter:brightness(1)}35%{filter:brightness(1.08)}52%{filter:brightness(.93)}70%{filter:brightness(1.04)}}
+.canvas{position:relative;width:var(--fw);aspect-ratio:4/5;max-width:100%;overflow:hidden;background:#000;box-shadow:inset 0 0 0 2px #000,inset 0 0 30px #000}
+.canvas img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% var(--pos,55%);will-change:transform;display:block}
+.canvas::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 40px 6px rgba(0,0,0,.8);pointer-events:none}
+.web{position:absolute;width:74px;height:74px;pointer-events:none;color:color-mix(in srgb,var(--parch) 55%,transparent);z-index:2}
+.web.tl{top:-6px;left:-6px}
+.web.br{bottom:-6px;right:-6px;transform:rotate(180deg)}
+.spider{position:absolute;right:26px;bottom:-56px;width:2px;height:58px;background:linear-gradient(color-mix(in srgb,var(--parch) 50%,transparent),color-mix(in srgb,var(--parch) 25%,transparent));transform-origin:top;animation:dangle 3.6s ease-in-out infinite;z-index:3}
+.spider svg{position:absolute;bottom:-14px;left:50%;width:22px;transform:translateX(-50%)}
+@keyframes dangle{0%,100%{transform:rotate(6deg) scaleY(1)}50%{transform:rotate(-6deg) scaleY(1.18)}}
+.sticker{position:absolute;top:-30px;right:-22px;z-index:5;width:96px;height:92px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;padding-top:14px;
+  color:#1A0A04;transform:rotate(12deg);animation:wiggle 4s ease-in-out infinite;filter:drop-shadow(0 6px 8px rgba(0,0,0,.65)) drop-shadow(0 0 14px color-mix(in srgb,var(--accent) 45%,transparent))}
+.sticker svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.sticker span{position:relative}
+.sticker .rs{font-family:var(--f-label);font-size:11px;letter-spacing:.08em}
+.sticker .val{font-family:var(--f-display);font-size:26px;margin-top:1px;text-shadow:0 1px 0 rgba(255,200,120,.45)}
+@keyframes wiggle{0%,100%{transform:rotate(12deg)}48%{transform:rotate(12deg)}52%{transform:rotate(3deg) scale(1.08)}56%{transform:rotate(17deg)}60%{transform:rotate(12deg)}}
+.plaque{position:absolute;left:50%;bottom:-15px;transform:translateX(-50%);font-family:var(--f-label);font-size:11px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;
+  color:#2A170C;background:linear-gradient(180deg,#e8b86a,#b07a32 55%,#7a4f1c);padding:4px 12px 3px;border-radius:2px;box-shadow:0 2px 6px #000,inset 0 1px 0 #ffe0a0;z-index:3}
+
+.card{position:relative;text-align:center;max-width:440px;display:flex;flex-direction:column;align-items:center;gap:8px;will-change:transform,opacity}
+.card h2{font-family:var(--f-display);font-weight:400;font-size:clamp(2.1rem,9.5vw,3.3rem);line-height:.95;margin:0;text-wrap:balance;color:var(--parch);
+  text-shadow:0 0 16px color-mix(in srgb,var(--glow,var(--accent)) 75%,transparent)}
+.card .tag{margin:0;font-style:italic;font-size:1.08rem;color:var(--parch-dim);max-width:34ch;text-wrap:balance}
+.ingr{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px 6px;max-width:400px}
+.ingr li{font-family:var(--f-label);font-size:12.5px;letter-spacing:.04em;color:var(--parch);padding:4px 9px;border:1px dashed color-mix(in srgb,var(--glow,var(--accent)) 60%,transparent);border-radius:3px;background:color-mix(in srgb,var(--bg-2) 70%,transparent)}
+
+/* ===== encerramento ===== */
+.end{position:relative;text-align:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 80px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.end h2{font-family:var(--f-display);font-weight:400;font-size:clamp(2.4rem,12vw,4.2rem);line-height:.95;margin:0;color:var(--accent);text-shadow:0 0 20px color-mix(in srgb,var(--accent) 60%,transparent);text-wrap:balance}
+.end p{margin:0;color:var(--parch-dim);font-style:italic;max-width:32ch}
+.end small{font-family:var(--f-label);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:color-mix(in srgb,var(--parch) 40%,transparent);margin-top:18px}
+.end .skull{width:56px;color:var(--parch-dim);opacity:.7}
+
+/* desktop: quadro ao lado da descrição */
+@media (min-width:880px){
+  .stage{flex-direction:row;gap:64px}
+  .hang{--fw:min(34vw,62svh*0.8,420px)}
+  .card{text-align:left;align-items:flex-start}
+  .ingr{justify-content:flex-start}
+}
+@media (max-height:640px) and (max-width:879px){
+  .hang{--fw:min(62vw,36svh)}
+  .card h2{font-size:2rem}
+  .card .tag{font-size:1rem}
+}
+
+/* movimento reduzido: tudo parado, legível */
+@media (prefers-reduced-motion:reduce){
+  .scene{height:auto}
+  .scene + .scene{margin-top:0}
+  .stage{position:relative;height:auto;min-height:0;padding-block:80px 40px}
+  .atmo .glow,.atmo .fog,.hero h1,.bat,.frame,.spider,.hint svg,.scene .frame,.sticker{animation:none!important}
+  .bat{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="atmo" aria-hidden="true"><div class="glow"></div><div class="fog"></div><div class="fog f2"></div><canvas id="embers"></canvas></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="bat" viewBox="0 0 64 28"><path fill="currentColor" d="M32 6c1.5 0 2.5-3 3-5 .3 2 .6 4 1.6 5.2 4-3.6 12-6 18-3.4-3 1.6-4.4 4.8-3.6 8.2-2.6-1.6-6-1.4-7.8.8-1.4-1.8-4.6-2.2-6.6-.4C35 14 33.6 18 32 22c-1.6-4-3-8-4.6-10.6-2-1.8-5.2-1.4-6.6.4-1.8-2.2-5.2-2.4-7.8-.8.8-3.4-.6-6.6-3.6-8.2 6-2.6 14-.2 18 3.4C28.4 5 28.7 3 29 1c.5 2 1.5 5 3 5z"/></symbol>
+    <symbol id="web" viewBox="0 0 74 74"><g fill="none" stroke="currentColor" stroke-width=".9"><path d="M2 2 72 8M2 2 60 40M2 2 40 62M2 2 8 72"/><path d="M22 4c-1 6 2 9 8 10 1 6 4 8 9 8 0 6 2 9 6 11"/><path d="M12 3c-.5 4 1.5 6 5 6.5.5 4 3 6 6.5 6 .5 4 2.5 6.5 5.5 7.5 0 4 2 6.5 4.5 8"/><path d="M4 22c6-1 9 2 10 8 6 1 8 4 8 9 6 0 9 2 11 6"/><path d="M3 12c4-.5 6 1.5 6.5 5 4 .5 6 3 6 6.5 4 .5 6.5 2.5 7.5 5.5"/></g></symbol>
+    <symbol id="spider" viewBox="0 0 24 20"><g fill="#0b0605" stroke="#0b0605" stroke-width="1.2" stroke-linecap="round"><ellipse cx="12" cy="11" rx="4" ry="5"/><circle cx="12" cy="5" r="2.6"/><path d="M8 9 2 5M8 11 1 11M8 13 2 18M16 9l6-4M16 11h7M16 13l6 5" fill="none"/></g><circle cx="11" cy="4.6" r=".7" fill="#C2410C"/><circle cx="13" cy="4.6" r=".7" fill="#C2410C"/></symbol>
+    <symbol id="pk" viewBox="0 0 100 96">
+      <g stroke="#EBDCC3" stroke-width="9" stroke-linejoin="round" fill="#EBDCC3">
+        <path d="M50 22c-3-8 1-15 7-18" fill="none" stroke-linecap="round"/>
+        <ellipse cx="28" cy="58" rx="24" ry="30"/><ellipse cx="72" cy="58" rx="24" ry="30"/><ellipse cx="50" cy="58" rx="24" ry="32"/>
+        <path d="M58 18c8-8 18-6 22 0-8 4-15 4-22 0z"/>
+      </g>
+      <path d="M50 22c-3-8 1-15 7-18" fill="none" stroke="#4D3A12" stroke-width="6" stroke-linecap="round"/>
+      <path d="M58 18c8-8 18-6 22 0-8 4-15 4-22 0z" fill="#3F7A2A"/>
+      <ellipse cx="28" cy="58" rx="24" ry="30" fill="#9A3412"/>
+      <ellipse cx="72" cy="58" rx="24" ry="30" fill="#9A3412"/>
+      <ellipse cx="38" cy="58" rx="20" ry="31" fill="#C2410C"/>
+      <ellipse cx="62" cy="58" rx="20" ry="31" fill="#C2410C"/>
+      <ellipse cx="50" cy="58" rx="17" ry="32" fill="#EA580C"/>
+      <ellipse cx="40" cy="40" rx="9" ry="5" fill="#FDBA74" opacity=".45" transform="rotate(-25 40 40)"/>
+      <path d="M86 78l6 6c-6 1-9 4-10 9-4-6-1-12 4-15z" fill="#d8c7a8" stroke="#1A0A04" stroke-width=".6" opacity=".9"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav" aria-label="Categorias do cardápio">
+  <ul>
+    <li><button type="button" data-go="lanche">Lanche</button></li>
+    <li><button type="button" data-go="pizza">Pizza</button></li>
+    <li><button type="button" data-go="drinks">Drinks</button></li>
+    <li><button type="button" data-go="sobremesa">Sobremesa</button></li>
+  </ul>
+  <div class="bar" id="bar"></div>
+</nav>
+
+<main>
+  <header class="hero">
+    <div class="moon" aria-hidden="true"></div>
+    <div class="bat b1" aria-hidden="true"><svg viewBox="0 0 64 28"><use href="#bat"/></svg></div>
+    <div class="bat b2" aria-hidden="true"><svg viewBox="0 0 64 28"><use href="#bat"/></svg></div>
+    <div class="bat b3" aria-hidden="true"><svg viewBox="0 0 64 28"><use href="#bat"/></svg></div>
+    <div class="hero-in">
+      <div class="eyebrow">Edição de Halloween</div>
+      <h1>Cardápio <span>Assombrado</span></h1>
+      <p>Seis criaturas penduradas na parede. Role devagar e entre em cada quadro.</p>
+      <div class="hint" aria-hidden="true">
+        Role para entrar
+        <svg width="18" height="26" viewBox="0 0 18 26"><path d="M9 1v18M2 13l7 8 7-8" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </header>
+
+  
+  <section class="scene" data-fx="spin" data-cat="lanche" style="--glow:#B91C1C;--pos:60%" aria-labelledby="d0">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/burger.webp" alt="Hambúrguer de pão preto com seringa de cheddar vermelho espetada" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
+          <div class="sticker" aria-label="Preço: R$ 49,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">49,90</span></div>
+          <span class="plaque">Lanche</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d0">Injeção Letal</h2>
+        <p class="tag">Pão preto, burger suculento e uma seringa de cheddar vermelho para você mesmo aplicar a dose.</p>
+        <ul class="ingr"><li>Pão preto</li><li>Hambúrguer</li><li>4 fatias de bacon</li><li>Cebola brûlée</li><li>Baconese</li><li>Seringa de cheddar vermelho (20 ml)</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="door" data-cat="pizza" style="--glow:#C2410C;--pos:62%" aria-labelledby="d1">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/pizza.webp" alt="Pizza de borda preta com guacamole, creme e Doritos" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          
+          <div class="sticker" aria-label="Preço: R$ 59,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">59,90</span></div>
+          <span class="plaque">Pizza</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d1">Pizza de los Muertos</h2>
+        <p class="tag">Borda negra como carvão e recheio mexicano, direto do Día de Muertos.</p>
+        <ul class="ingr"><li>Molho rústico</li><li>Mussarela</li><li>Carne moída</li><li>Guacamole</li><li>Creme azedo</li><li>Doritos</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="drop" data-cat="drinks" style="--glow:#EA580C;--pos:55%" aria-labelledby="d2">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/caveira.webp" alt="Drink laranja em copo de caveira com borda escorrendo vermelho" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
+          <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
+          <span class="plaque">Drink</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d2">Calavera Moranga</h2>
+        <p class="tag">Margarita de abóbora servida dentro de uma caveira que sangra pela borda.</p>
+        <ul class="ingr"><li>Tequila</li><li>Cointreau</li><li>Purê de abóbora moranga</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="mist" data-cat="drinks" style="--glow:#22C55E;--pos:45%" aria-labelledby="d3">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/mumia.webp" alt="Copo alto com drink verde enrolado em gaze como uma múmia, com olhos vermelhos" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          
+          <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
+          <span class="plaque">Drink</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d3">O Despertar da Múmia</h2>
+        <p class="tag">Cremoso e tropical, enfaixado até os olhos.</p>
+        <ul class="ingr"><li>Suco de laranja</li><li>Abacaxi</li><li>Morango</li><li>Leite condensado</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="pulse" data-cat="drinks" style="--glow:#991B1B;--pos:55%" aria-labelledby="d4">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/sangue.webp" alt="Bolsa de sangue com drink vermelho ao lado de taça com olho e aranha" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
+          <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
+          <span class="plaque">Drink</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d4">Doador Universal</h2>
+        <p class="tag">Gin cítrico entregue na bolsa de transfusão. Você mesmo despeja na taça.</p>
+        <ul class="ingr"><li>Gin</li><li>Limão e açúcar</li><li>Bitter</li><li>Cointreau</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="eye" data-cat="sobremesa" style="--glow:#B91C1C;--pos:50%" aria-labelledby="d5">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/olho.webp" alt="Sorvete de baunilha com calda de frutas vermelhas e olho comestível no topo" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          
+          <div class="sticker" aria-label="Preço: R$ 29,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">29,90</span></div>
+          <span class="plaque">Sobremesa</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d5">O Olho que Tudo Vê</h2>
+        <p class="tag">Ele observa você desde a primeira colherada.</p>
+        <ul class="ingr"><li>Base de bolacha</li><li>Sorvete de baunilha</li><li>Frutas vermelhas</li><li>Olho comestível</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+
+  <footer class="end">
+    <svg class="skull" viewBox="0 0 64 64" aria-hidden="true"><path fill="currentColor" d="M32 4C18 4 8 14 8 27c0 8 4 13 8 16v8c0 2 2 4 4 4h4v-6h4v6h8v-6h4v6h4c2 0 4-2 4-4v-8c4-3 8-8 8-16C56 14 46 4 32 4zm-10 30a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm20 0a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm-10 8-4-6h8z"/></svg>
+    <h2>Escolheu sua criatura?</h2>
+    <p>Chame o garçom e diga o nome dela. Ele sabe onde ela mora.</p>
+    <small>Imagens ilustrativas</small>
+  </footer>
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const scenes = [...document.querySelectorAll('.scene')];
+  const navBtns = [...document.querySelectorAll('.nav button')];
+  const bar = document.getElementById('bar');
+  const clamp = (v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+  const eOut = t=>1-Math.pow(1-t,3);
+  const eIn = t=>t*t*t;
+  const eBack = t=>{const c=1.9;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)};
+  const bounce = x=>{const n=7.5625,d=2.75;if(x<1/d)return n*x*x;if(x<2/d)return n*(x-=1.5/d)*x+.75;if(x<2.5/d)return n*(x-=2.25/d)*x+.9375;return n*(x-=2.625/d)*x+.984375};
+  const bump = (x,c,w)=>Math.max(0,1-Math.abs(x-c)/w);
+
+  navBtns.forEach(b=>b.addEventListener('click',()=>{
+    const s = scenes.find(x=>x.dataset.cat===b.dataset.go);
+    if(!s) return;
+    const range = s.offsetHeight - innerHeight;
+    const y = s.getBoundingClientRect().top + scrollY + (reduce ? -60 : range*0.22);
+    scrollTo({top:y,behavior:'smooth'});
+  }));
+
+  const parts = scenes.map(s=>({
+    s, fx:s.dataset.fx, zoom:s.querySelector('.zoom'), hang:s.querySelector('.hang'),
+    img:s.querySelector('.canvas img'), flash:s.querySelector('.flash'),
+    card:s.querySelector('.card'), veil:s.querySelector('.veil'), stage:s.querySelector('.stage')
+  }));
+
+  // zoom sempre levando o centro do quadro ao centro da tela
+  const Z = (ez,k,dx,dy)=>`translate(${dx*ez}px,${dy*ez}px) scale(${1+ez*k})`;
+
+  // cada quadro com sua própria coreografia
+  const FX = {
+    // gira como um redemoinho e mergulha no centro
+    spin(p,e,E,t,ez,out,dx,dy){
+      p.zoom.style.transform = `${Z(ez,3.4,dx,dy)} rotate(${(1-E)*-220 + ez*-12}deg) scale(${0.2+0.8*eBack(e)})`;
+      p.zoom.style.opacity = clamp(e*2.5)*out;
+      p.img.style.transform = `scale(${1.2-0.2*E + ez*0.9}) rotate(${(1-E)*25}deg)`;
+      return 1;
+    },
+    // abre como uma porta e depois tomba para trás na escuridão
+    door(p,e,E,t,ez,out){
+      p.zoom.style.transformOrigin = '50% 100%';
+      p.zoom.style.transform = `perspective(1100px) rotateX(${ez*82}deg) rotateY(${(1-E)*-105}deg) scale(${(0.85+0.15*E)*(1-ez*0.35)})`;
+      p.zoom.style.opacity = clamp(e*3)*out;
+      p.img.style.transform = `scale(${1.15-0.15*E}) translateX(${(1-E)*-30}px)`;
+      return 1;
+    },
+    // despenca do teto, quica e balança; sai girando para dentro
+    drop(p,e,E,t,ez,out,dx,dy,r){
+      // queda por tempo (não presa à rolagem): dispara quando o quadro chega
+      const now = performance.now();
+      if(e>0.75 && p.dropStart==null){ p.dropStart = now; p.landed = false; }
+      if(e<0.35){ p.dropStart = null; }
+      const k = p.dropStart==null ? 0 : clamp((now-p.dropStart)/1100);
+      if(!p.landed && k>0.36){ p.landed = true; angV += 5.5; }
+      const fall = Math.max(0,r.top) + p.zoom.offsetTop + p.zoom.offsetHeight + 80;
+      const y = -(1-bounce(k))*fall;
+      p.zoom.style.transform = `${Z(ez,3,dx,dy)} translateY(${y}px) rotate(${(1-k)*10 + ez*35}deg)`;
+      p.zoom.style.opacity = (p.dropStart==null ? 0 : 1)*out;
+      p.img.style.transform = `scale(${1.1 + ez*0.7})`;
+      return 2.4;
+    },
+    // a faixa da múmia desenrola de cima para baixo; sai virando névoa
+    mist(p,e,E,t,ez,out,dx,dy){
+      const skew = Math.sin(e*14)*(1-E)*7;
+      p.zoom.style.transform = `${Z(ez,0.8,dx,dy)} translateY(${(1-E)*24}px) skewX(${skew}deg)`;
+      p.zoom.style.clipPath = E>0.995 ? 'none' : `inset(-80px -60px ${(1-E)*100}% -60px)`;
+      p.zoom.style.filter = `blur(${(1-E)*8 + ez*16}px) brightness(${1+ez*0.6})`;
+      p.zoom.style.opacity = 1-clamp(ez*1.6);
+      p.img.style.transform = `scale(${1.25-0.25*E + ez*0.3}) translateY(${(1-E)*-20}px)`;
+      return 0.8;
+    },
+    // pulsa como um coração e mergulha num túnel vermelho
+    pulse(p,e,E,t,ez,out,dx,dy){
+      const beat = Math.sin(e*Math.PI*6)*(1-e)*0.2;
+      p.zoom.style.transform = `${Z(ez,4.2,dx,dy)} scale(${0.65+0.35*E+beat})`;
+      p.zoom.style.opacity = clamp(e*2)*out;
+      p.flash.style.opacity = clamp(Math.max(0,Math.sin(e*Math.PI*6))*(1-e)*0.9 + ez*1.2);
+      p.img.style.transform = `scale(${1.05 + ez*1.1})`;
+      return 0.6;
+    },
+    // a pálpebra abre, pisca uma vez, e você cai dentro da pupila
+    eye(p,e,E,t,ez,out,dx,dy){
+      const blink = 1 - 0.92*bump(e,0.86,0.07);
+      const ry = E*80*blink;
+      p.zoom.style.clipPath = (E>0.995 && blink>0.999) ? 'none' : `ellipse(${60+50*E}% ${ry}% at 50% 50%)`;
+      p.zoom.style.transform = `${Z(ez,3.6,dx,dy)} scale(${0.9+0.1*E})`;
+      p.zoom.style.opacity = out;
+      p.img.style.transform = `scale(${1.3-0.3*E + ez*1.4})`;
+      return 1;
+    }
+  };
+
+  let lastY = scrollY, lastV = 0, ang = 0, angV = 0;
+
+  function frame(){
+    const y = scrollY, vh = innerHeight;
+    const v = y - lastY; const acc = v - lastV;
+    lastY = y; lastV = v;
+    angV += -ang*0.045 - acc*0.06 - v*0.004;
+    angV *= 0.9; ang += angV; ang = clamp(ang,-9,9);
+    scrollVel = v;
+
+    const docH = document.documentElement.scrollHeight - vh;
+    bar.style.transform = `scaleX(${docH>0? clamp(y/docH):0})`;
+
+    let current = null;
+    for(const p of parts){
+      const r = p.s.getBoundingClientRect();
+      if(r.top < vh*0.5 && r.bottom > vh*0.5) current = p.s.dataset.cat;
+      if(reduce) continue;
+      if(r.top > vh*1.1 || r.bottom < -vh*0.1) continue;
+      const range = r.height - vh;
+      const e = clamp((1 - r.top/vh)/0.9);
+      const E = eOut(e);
+      const t = clamp(-r.top/range);
+      const z = clamp((t-0.52)/0.48), ez = eIn(z);
+      const out = 1 - clamp((z-0.55)/0.45);
+      // distância entre o centro do quadro e o centro da tela
+      const sw = p.stage.clientWidth;
+      const dx = sw/2 - (p.zoom.offsetLeft + p.zoom.offsetWidth/2);
+      const dy = vh/2 - (p.zoom.offsetTop + p.zoom.offsetHeight/2) - (r.top>0 ? 0 : 0);
+
+      const swayK = FX[p.fx](p,e,E,t,ez,out,dx,dy,r);
+      p.hang.style.transform = `rotate(${ang*swayK*(1-z)}deg)`;
+
+      const ci = clamp((e-0.6)/0.4);
+      const fo = clamp((t-0.42)/0.12);
+      p.card.style.opacity = ci*(1-fo);
+      p.card.style.transform = `translateY(${(1-ci)*28 - fo*20}px)`;
+      p.veil.style.opacity = clamp(ez*1.4)*out*0.85;
+    }
+    navBtns.forEach(b=>b.setAttribute('aria-current', String(b.dataset.go===current)));
+    requestAnimationFrame(frame);
+  }
+  let scrollVel = 0;
+  requestAnimationFrame(frame);
+
+  // ===== fundo: abóboras, caveirinhas, morcegos e brasas =====
+  const cv = document.getElementById('embers'), cx = cv.getContext('2d');
+  let W,H,dpr;
+  function size(){dpr=Math.min(devicePixelRatio||1,2);W=cv.width=innerWidth*dpr;H=cv.height=innerHeight*dpr;}
+  size(); addEventListener('resize',size);
+
+  function sprite(s,draw){const c=document.createElement('canvas');c.width=c.height=s;const g=c.getContext('2d');g.translate(s/2,s/2);draw(g,s);return c;}
+  const pumpkin = s=>sprite(s,(g,s)=>{
+    const r=s*0.36;
+    g.shadowColor='#F59E0B';g.shadowBlur=s*0.18;
+    [[-.42,.62,'#9A3412'],[.42,.62,'#9A3412'],[-.2,.75,'#C2410C'],[.2,.75,'#C2410C'],[0,.62,'#EA580C']].forEach(([ox,w,c])=>{
+      g.fillStyle=c;g.beginPath();g.ellipse(ox*r,s*0.05,r*w,r*0.92,0,0,6.283);g.fill();});
+    g.shadowBlur=0;
+    g.fillStyle='#3f3a14';g.fillRect(-s*0.04,-r*1.15,s*0.08,s*0.14);
+    g.fillStyle='#FCD34D';g.shadowColor='#FCD34D';g.shadowBlur=s*0.12;
+    const tri=(x,y,w)=>{g.beginPath();g.moveTo(x-w,y+w*.7);g.lineTo(x+w,y+w*.7);g.lineTo(x,y-w*.8);g.fill()};
+    tri(-r*0.38,-r*0.08,r*0.2);tri(r*0.38,-r*0.08,r*0.2);
+    g.beginPath();g.moveTo(-r*0.55,r*0.3);
+    for(let i=0;i<=6;i++){g.lineTo(-r*0.55+i*r*0.183,r*(i%2?0.42:0.3));}
+    g.lineTo(r*0.4,r*0.6);g.lineTo(-r*0.4,r*0.6);g.closePath();g.fill();
+  });
+  const skull = s=>sprite(s,(g,s)=>{
+    const r=s*0.3;
+    g.fillStyle='#E9DCC3';g.shadowColor='#C2410C';g.shadowBlur=s*0.15;
+    g.beginPath();g.arc(0,-r*0.15,r,0,6.283);g.fill();
+    g.beginPath();g.roundRect(-r*0.55,r*0.45,r*1.1,r*0.6,r*0.15);g.fill();
+    g.shadowBlur=0;g.fillStyle='#1a0d08';
+    g.beginPath();g.ellipse(-r*0.4,-r*0.05,r*0.26,r*0.3,0,0,6.283);g.ellipse(r*0.4,-r*0.05,r*0.26,r*0.3,0,0,6.283);g.fill();
+    g.beginPath();g.moveTo(0,r*0.25);g.lineTo(-r*0.12,r*0.48);g.lineTo(r*0.12,r*0.48);g.fill();
+    g.strokeStyle='#1a0d08';g.lineWidth=Math.max(1,s*0.025);
+    for(let i=-2;i<=2;i++){g.beginPath();g.moveTo(i*r*0.2,r*0.62);g.lineTo(i*r*0.2,r*1.0);g.stroke();}
+    g.fillStyle='#F59E0B';g.beginPath();g.arc(-r*0.4,-r*0.02,r*0.06,0,6.283);g.arc(r*0.4,-r*0.02,r*0.06,0,6.283);g.fill();
+  });
+  const batPath = new Path2D('M32 6c1.5 0 2.5-3 3-5 .3 2 .6 4 1.6 5.2 4-3.6 12-6 18-3.4-3 1.6-4.4 4.8-3.6 8.2-2.6-1.6-6-1.4-7.8.8-1.4-1.8-4.6-2.2-6.6-.4C35 14 33.6 18 32 22c-1.6-4-3-8-4.6-10.6-2-1.8-5.2-1.4-6.6.4-1.8-2.2-5.2-2.4-7.8-.8.8-3.4-.6-6.6-3.6-8.2 6-2.6 14-.2 18 3.4C28.4 5 28.7 3 29 1c.5 2 1.5 5 3 5z');
+  const bat = s=>sprite(s,(g,s)=>{const k=s/70;g.scale(k,k);g.translate(-32,-12);g.fillStyle='#050302';g.shadowColor='#C2410C';g.shadowBlur=6;g.fill(batPath);});
+
+  const SPR = {p:[pumpkin(96),pumpkin(64)], s:[skull(96),skull(64)], b:[bat(96)]};
+  const items = [];
+  if(!reduce){
+    const add=(type,n)=>{for(let i=0;i<n;i++){const d=Math.random()*0.8+0.35;items.push({type,x:Math.random(),y:Math.random(),d,
+      sz:(type==='e'? 2+Math.random()*2.5 : type==='b'? 34+d*30 : 18+d*30),
+      sp:(type==='b'?0.0004:0.00045)*(0.5+d), rot:Math.random()*6.28, vr:(Math.random()-.5)*0.012, w:Math.random()*6.28,
+      a:type==='e'? .5+Math.random()*.5 : .25+d*.45, vx:type==='b'? (Math.random()<.5?-1:1)*(0.0008+Math.random()*0.0008):0});}};
+    add('p',9); add('s',8); add('b',4); add('e',22);
+  }
+  (function draw(){
+    cx.clearRect(0,0,W,H);
+    for(const p of items){
+      p.w += .02;
+      p.y -= p.sp + scrollVel*0.00005*p.d;
+      p.x += p.vx;
+      if(p.y<-.08){p.y=1.08;p.x=Math.random();}
+      if(p.y>1.1){p.y=-.06;}
+      if(p.x<-.1) p.x=1.1; if(p.x>1.1) p.x=-.1;
+      const x=(p.x+Math.sin(p.w)*.012)*W, y=p.y*H, edge=clamp(Math.min(p.y,1-p.y)*6);
+      if(p.type==='e'){
+        cx.globalAlpha=p.a*edge;cx.fillStyle='#F59E0B';cx.beginPath();cx.arc(x,y,p.sz*dpr*.5,0,6.283);cx.fill();continue;
+      }
+      p.rot += p.vr;
+      const img = p.type==='p'? SPR.p[p.d>.8?0:1] : p.type==='s'? SPR.s[p.d>.8?0:1] : SPR.b[0];
+      const S = p.sz*dpr;
+      cx.save();cx.globalAlpha=p.a*edge;cx.translate(x,y);
+      if(p.type==='b'){cx.scale(p.vx<0?-1:1, 0.55+0.45*Math.abs(Math.sin(p.w*6)));}
+      else cx.rotate(Math.sin(p.rot)*0.5);
+      cx.drawImage(img,-S/2,-S/2,S,S);cx.restore();
+    }
+    cx.globalAlpha=1;
+    if(items.length) requestAnimationFrame(draw);
+  })();
+})();
+</script>
+</body>
+</html>
