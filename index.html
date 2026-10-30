@@ -47,9 +47,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* ===== navegação ===== */
 .nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
-.nav ul{list-style:none;margin:0 auto;padding:0;display:flex;gap:8px;justify-content:safe center;max-width:720px;overflow-x:auto;scrollbar-width:none}
+.nav ul{list-style:none;margin:0 auto;padding:0;display:flex;gap:6px;justify-content:safe center;max-width:720px;overflow-x:auto;scrollbar-width:none}
 .nav ul::-webkit-scrollbar{display:none}
-.nav button{font-family:var(--f-label);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--parch-dim);background:transparent;border:1px solid color-mix(in srgb,var(--parch) 20%,transparent);border-radius:999px;padding:7px 12px;cursor:pointer;white-space:nowrap;transition:all .25s}
+.nav button{font-family:var(--f-label);font-size:clamp(10.5px,2.9vw,12px);letter-spacing:.03em;text-transform:uppercase;color:var(--parch-dim);background:transparent;border:1px solid color-mix(in srgb,var(--parch) 20%,transparent);border-radius:999px;padding:7px clamp(8px,2.4vw,12px);cursor:pointer;white-space:nowrap;transition:all .25s}
 .nav button[aria-current="true"]{color:var(--bg);background:var(--accent);border-color:var(--accent);box-shadow:0 0 14px color-mix(in srgb,var(--accent) 60%,transparent)}
 .nav button:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
 .nav .bar{position:absolute;left:0;bottom:-1px;height:2px;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,var(--blood),var(--accent),var(--ember))}
@@ -191,6 +191,7 @@ main{position:relative;z-index:1}
 <nav class="nav" aria-label="Categorias do cardápio">
   <ul>
     <li><button type="button" data-go="lanche">Lanche</button></li>
+    <li><button type="button" data-go="porcao">Porção</button></li>
     <li><button type="button" data-go="pizza">Pizza</button></li>
     <li><button type="button" data-go="drinks">Drinks</button></li>
     <li><button type="button" data-go="sobremesa">Sobremesa</button></li>
@@ -207,7 +208,7 @@ main{position:relative;z-index:1}
     <div class="hero-in">
       <div class="eyebrow">Edição de Halloween</div>
       <h1>Cardápio <span>Assombrado</span></h1>
-      <p>Seis criaturas penduradas na parede. Role devagar e entre em cada quadro.</p>
+      <p>Sete criaturas penduradas na parede. Role devagar e entre em cada quadro.</p>
       <div class="hint" aria-hidden="true">
         Role para entrar
         <svg width="18" height="26" viewBox="0 0 18 26"><path d="M9 1v18M2 13l7 8 7-8" fill="none" stroke="#C2410C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -238,7 +239,29 @@ main{position:relative;z-index:1}
       <div class="veil"></div>
     </div>
   </section>
-  <section class="scene" data-fx="door" data-cat="pizza" style="--glow:#C2410C;--pos:62%" aria-labelledby="d1">
+  <section class="scene" data-fx="grave" data-cat="porcao" style="--glow:#65A30D;--pos:58%" aria-labelledby="d1">
+    <div class="stage">
+      <div class="zoom"><div class="hang">
+        <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
+        <span aria-hidden="true" style="position:absolute;left:50%;top:-52px;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#d9c3a0,#4a3b2a);box-shadow:0 2px 4px #000"></span>
+        <div class="frame">
+          <div class="canvas"><div class="flash"></div><img src="img/batata.webp" alt="Porção de batatas com bacon em cubos e catupiry verde, com uma lápide R.I.P. espetada" decoding="async"></div>
+          <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
+          <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
+          
+          <div class="sticker" aria-label="Preço: R$ 45,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">45,90</span></div>
+          <span class="plaque">Porção</span>
+        </div>
+      </div></div>
+      <div class="card">
+        <h2 id="d1">Cova Rasa</h2>
+        <p class="tag">Batatas enterradas sob catupiry verde e bacon. Descanse em paz.</p>
+        <ul class="ingr"><li>Batata</li><li>Catupiry verde</li><li>Bacon em cubos</li></ul>
+      </div>
+      <div class="veil"></div>
+    </div>
+  </section>
+  <section class="scene" data-fx="door" data-cat="pizza" style="--glow:#C2410C;--pos:62%" aria-labelledby="d2">
     <div class="stage">
       <div class="zoom"><div class="hang">
         <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
@@ -247,20 +270,20 @@ main{position:relative;z-index:1}
           <div class="canvas"><div class="flash"></div><img src="img/pizza.webp" alt="Pizza de borda preta com guacamole, creme e Doritos" decoding="async"></div>
           <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
           <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
-          
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
           <div class="sticker" aria-label="Preço: R$ 59,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">59,90</span></div>
           <span class="plaque">Pizza</span>
         </div>
       </div></div>
       <div class="card">
-        <h2 id="d1">Pizza de los Muertos</h2>
+        <h2 id="d2">Pizza de los Muertos</h2>
         <p class="tag">Borda negra como carvão e recheio mexicano, direto do Día de Muertos.</p>
         <ul class="ingr"><li>Molho rústico</li><li>Mussarela</li><li>Carne moída</li><li>Guacamole</li><li>Creme azedo</li><li>Doritos</li></ul>
       </div>
       <div class="veil"></div>
     </div>
   </section>
-  <section class="scene" data-fx="drop" data-cat="drinks" style="--glow:#EA580C;--pos:55%" aria-labelledby="d2">
+  <section class="scene" data-fx="drop" data-cat="drinks" style="--glow:#EA580C;--pos:55%" aria-labelledby="d3">
     <div class="stage">
       <div class="zoom"><div class="hang">
         <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
@@ -269,20 +292,20 @@ main{position:relative;z-index:1}
           <div class="canvas"><div class="flash"></div><img src="img/caveira.webp" alt="Drink laranja em copo de caveira com borda escorrendo vermelho" decoding="async"></div>
           <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
           <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
-          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
+          
           <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
           <span class="plaque">Drink</span>
         </div>
       </div></div>
       <div class="card">
-        <h2 id="d2">Calavera Moranga</h2>
+        <h2 id="d3">Calavera Moranga</h2>
         <p class="tag">Margarita de abóbora servida dentro de uma caveira que sangra pela borda.</p>
         <ul class="ingr"><li>Tequila</li><li>Cointreau</li><li>Purê de abóbora moranga</li></ul>
       </div>
       <div class="veil"></div>
     </div>
   </section>
-  <section class="scene" data-fx="mist" data-cat="drinks" style="--glow:#22C55E;--pos:45%" aria-labelledby="d3">
+  <section class="scene" data-fx="mist" data-cat="drinks" style="--glow:#22C55E;--pos:45%" aria-labelledby="d4">
     <div class="stage">
       <div class="zoom"><div class="hang">
         <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
@@ -291,20 +314,20 @@ main{position:relative;z-index:1}
           <div class="canvas"><div class="flash"></div><img src="img/mumia.webp" alt="Copo alto com drink verde enrolado em gaze como uma múmia, com olhos vermelhos" decoding="async"></div>
           <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
           <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
-          
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
           <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
           <span class="plaque">Drink</span>
         </div>
       </div></div>
       <div class="card">
-        <h2 id="d3">O Despertar da Múmia</h2>
+        <h2 id="d4">O Despertar da Múmia</h2>
         <p class="tag">Cremoso e tropical, enfaixado até os olhos.</p>
         <ul class="ingr"><li>Suco de laranja</li><li>Abacaxi</li><li>Morango</li><li>Leite condensado</li></ul>
       </div>
       <div class="veil"></div>
     </div>
   </section>
-  <section class="scene" data-fx="pulse" data-cat="drinks" style="--glow:#991B1B;--pos:55%" aria-labelledby="d4">
+  <section class="scene" data-fx="pulse" data-cat="drinks" style="--glow:#991B1B;--pos:55%" aria-labelledby="d5">
     <div class="stage">
       <div class="zoom"><div class="hang">
         <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
@@ -313,20 +336,20 @@ main{position:relative;z-index:1}
           <div class="canvas"><div class="flash"></div><img src="img/sangue.webp" alt="Bolsa de sangue com drink vermelho ao lado de taça com olho e aranha" decoding="async"></div>
           <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
           <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
-          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
+          
           <div class="sticker" aria-label="Preço: R$ 34,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">34,90</span></div>
           <span class="plaque">Drink</span>
         </div>
       </div></div>
       <div class="card">
-        <h2 id="d4">Doador Universal</h2>
+        <h2 id="d5">Doador Universal</h2>
         <p class="tag">Gin cítrico entregue na bolsa de transfusão. Você mesmo despeja na taça.</p>
         <ul class="ingr"><li>Gin</li><li>Limão e açúcar</li><li>Bitter</li><li>Cointreau</li></ul>
       </div>
       <div class="veil"></div>
     </div>
   </section>
-  <section class="scene" data-fx="eye" data-cat="sobremesa" style="--glow:#B91C1C;--pos:50%" aria-labelledby="d5">
+  <section class="scene" data-fx="eye" data-cat="sobremesa" style="--glow:#B91C1C;--pos:50%" aria-labelledby="d6">
     <div class="stage">
       <div class="zoom"><div class="hang">
         <svg class="wire" viewBox="0 0 100 50" preserveAspectRatio="none" aria-hidden="true"><path d="M50 3 6 50M50 3 94 50" fill="none" stroke="#7a6a55" stroke-width="1.2" vector-effect="non-scaling-stroke"/></svg>
@@ -335,13 +358,13 @@ main{position:relative;z-index:1}
           <div class="canvas"><div class="flash"></div><img src="img/olho.webp" alt="Sorvete de baunilha com calda de frutas vermelhas e olho comestível no topo" decoding="async"></div>
           <svg class="web tl" aria-hidden="true"><use href="#web"/></svg>
           <svg class="web br" aria-hidden="true"><use href="#web"/></svg>
-          
+          <div class="spider" aria-hidden="true"><svg viewBox="0 0 24 20"><use href="#spider"/></svg></div>
           <div class="sticker" aria-label="Preço: R$ 29,90"><svg viewBox="0 0 100 96" aria-hidden="true"><use href="#pk"/></svg><span class="rs">R$</span><span class="val">29,90</span></div>
           <span class="plaque">Sobremesa</span>
         </div>
       </div></div>
       <div class="card">
-        <h2 id="d5">O Olho que Tudo Vê</h2>
+        <h2 id="d6">O Olho que Tudo Vê</h2>
         <p class="tag">Ele observa você desde a primeira colherada.</p>
         <ul class="ingr"><li>Base de bolacha</li><li>Sorvete de baunilha</li><li>Frutas vermelhas</li><li>Olho comestível</li></ul>
       </div>
@@ -395,6 +418,16 @@ main{position:relative;z-index:1}
       p.zoom.style.opacity = clamp(e*2.5)*out;
       p.img.style.transform = `scale(${1.2-0.2*E + ez*0.9}) rotate(${(1-E)*25}deg)`;
       return 1;
+    },
+    // levanta da cova: sobe do chão tremendo a terra; sai afundando no centro
+    grave(p,e,E,t,ez,out,dx,dy){
+      const up = 1-eOut(clamp(e/0.95));
+      const shake = Math.sin(e*70)*up*7;
+      p.zoom.style.transform = `${Z(ez,3.2,dx,dy)} translate(${shake}px, ${up*100}%) rotate(${shake*0.4 + ez*-18}deg)`;
+      p.zoom.style.clipPath = up<0.002 ? 'none' : `inset(-90px -60px ${up*100}% -60px)`;
+      p.zoom.style.opacity = clamp(e*4)*out;
+      p.img.style.transform = `scale(${1.1 + up*0.15 + ez*0.9}) translateY(${up*-30}px)`;
+      return 1.3;
     },
     // abre como uma porta e depois tomba para trás na escuridão
     door(p,e,E,t,ez,out){
@@ -450,7 +483,7 @@ main{position:relative;z-index:1}
     }
   };
 
-  let lastY = scrollY, lastV = 0, ang = 0, angV = 0;
+  let lastCur; let lastY = scrollY, lastV = 0, ang = 0, angV = 0;
 
   function frame(){
     const y = scrollY, vh = innerHeight;
@@ -489,7 +522,8 @@ main{position:relative;z-index:1}
       p.card.style.transform = `translateY(${(1-ci)*28 - fo*20}px)`;
       p.veil.style.opacity = clamp(ez*1.4)*out*0.85;
     }
-    navBtns.forEach(b=>b.setAttribute('aria-current', String(b.dataset.go===current)));
+    if(current!==lastCur){ lastCur=current; navBtns.forEach(b=>{const on=b.dataset.go===current;b.setAttribute('aria-current',String(on));
+      if(on){const ul=b.parentElement.parentElement;ul.scrollTo({left:b.offsetLeft-ul.clientWidth/2+b.offsetWidth/2,behavior:'smooth'});}}); }
     requestAnimationFrame(frame);
   }
   let scrollVel = 0;
